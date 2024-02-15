@@ -1,4 +1,4 @@
-import type { WorkerMessage } from './types';
+import type { WorkerMessage } from "./types";
 
 onmessage = async ({ data }: MessageEvent<WorkerMessage>) => {
   const workerResult = await compressFileWorker(data);
@@ -8,16 +8,21 @@ onmessage = async ({ data }: MessageEvent<WorkerMessage>) => {
   close();
 };
 
-async function compressFileWorker({ img: { width, height }, buffer, config }: WorkerMessage) {
+async function compressFileWorker({
+  img: { width, height },
+  buffer,
+  config,
+}: WorkerMessage) {
   // Create an OffscreenCanvas
   const offscreenCanvas = new OffscreenCanvas(width, height);
-  const ctx = offscreenCanvas.getContext('2d');
+  const ctx = offscreenCanvas.getContext("2d");
 
   const blob = new Blob([buffer], { type: config.originalType });
 
-  // THIS STEP FAILS!!
-  // Create an ImageBitmap from the object URL
-  const imageBitmap = await createImageBitmap(blob);
+  // -----------------------------
+  // Create an ImageBitmap from the blob
+  const imageBitmap = await createImageBitmap(blob); // THIS STEP FAILS!!
+  // -----------------------------
 
   // Draw the ImageBitmap onto the OffscreenCanvas
   ctx?.drawImage(imageBitmap, 0, 0);
