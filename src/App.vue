@@ -63,13 +63,26 @@ watch(
 <template>
   <p>
     To reproduce:<br />
-    Drop all 16 files from public/testImages here.<br />
     Look at your console.<br />
+    Drop all 16 files from
+    <a
+      href="https://github.com/Lenni009/ff-worker-issue/tree/main/public/testImages"
+      target="_blank"
+      >public/testImages</a
+    >
+    here.<br />
     It will log out how many files are uncompressed.<br />
+    If the counter reaches 0, that means everything worked.<br />
     In Chrome, this counter reaches 0.<br />
     In Firefox, it throws errors along the way, and the files with an error do
     not get compressed.<br />
-    The error happens in the lib/worker.ts file (marked by comment)
+    The error happens in the
+    <a
+      href="https://github.com/Lenni009/ff-worker-issue/blob/main/src/lib/worker.ts"
+      target="_blank"
+      >src/lib/worker.ts</a
+    >
+    file (marked by comment)
   </p>
   <input
     id="file-upload"
