@@ -14,8 +14,11 @@ async function compress(file: File) {
   const compressedFile = new File([compressedImage], "compressed", {
     type: "image/jpeg",
   });
+
+  // logging
   runs++;
   console.log(runs); // should reach 16
+
   return compressedFile;
 }
 
