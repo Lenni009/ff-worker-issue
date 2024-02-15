@@ -1,5 +1,5 @@
 import type { WorkerMessage } from './types';
-import ImageWorker from './worker?worker&inline';
+import ImageWorker from './worker?worker';
 
 export async function handleWorkerProcess(workerMessage: WorkerMessage) {
   return new Promise<Blob>((resolve, reject) => {
