@@ -11,19 +11,23 @@
     <p>
       To reproduce:<br />
       Look at your console.<br />
-      Drop all 16 files from
+      Get test files from
       <a
         href="https://github.com/Lenni009/ff-worker-issue/tree/main/public/testImages"
         target="_blank"
         >public/testImages</a
-      >
-      here.<br />
+      >.<br />
       It will log out how many files have been compressed.<br />
-      If the counter reaches 16, that means everything worked.<br />
-      In Chrome, this counter reaches 16.<br />
-      In Firefox, it throws errors along the way, and the files with an error do
-      not get compressed.<br />
-      The error happens in the
+      If everything worked, the counter will match the amount of uploaded files
+      and will display a success message at the end.<br />
+      In Chrome, this works consistently.<br />
+      In Firefox, it depends on what you are doing.<br />
+      If you are compressing many small files, one or two might just be
+      forgotten, but there won't be any error. (This doesn't happen
+      consistently, may need multiple tries)<br />
+      If you are compressing very large files, there will be a "Object is no
+      longer usable" error. (this happens consistently on my machine)<br />
+      That error happens in the
       <a
         href="https://github.com/Lenni009/ff-worker-issue/blob/main/src/lib/worker.ts"
         target="_blank"
