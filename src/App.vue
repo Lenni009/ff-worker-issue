@@ -37,11 +37,9 @@ async function editFileObj(fileObj: FileObj) {
     const compressedImage = await compressImage(fileObj.file);
 
     const compressedFile = new File([compressedImage], 'filename', {type: 'image/jpeg'});
+    fileObj.isCompressed = true;
     fileObj.file = compressedFile;
 }
-
-
-const compressedImages = computed(() => files.value.filter(item => item.isCompressed));
 
 const allCompressed = computed(() => !uncompressedImages.value.length);
 </script>
@@ -54,10 +52,5 @@ const allCompressed = computed(() => !uncompressedImages.value.length);
     <h2>Input files:</h2>
     <ul>
         <li v-for="file in files" :key="file.id">{{ file.file.name }}, {{file.file.size}}</li>
-    </ul>
-    
-    <h2>Output files:</h2>
-    <ul>
-        <li v-for="file in compressedImages" :key="file.id">{{ file.file.name }}, {{file.file.size}}</li>
     </ul>
 </template>
