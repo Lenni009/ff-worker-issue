@@ -1,4 +1,5 @@
 import type { WorkerMessage } from './types';
+// @ts-ignore
 import ImageWorker from './worker?worker';
 
 export async function handleWorkerProcess(workerMessage: WorkerMessage) {
