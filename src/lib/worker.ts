@@ -15,6 +15,7 @@ async function compressFileWorker({ img: { width, height }, buffer, config }: Wo
 
   const blob = new Blob([buffer], { type: config.originalType });
 
+  // THIS STEP FAILS!!
   // Create an ImageBitmap from the object URL
   const imageBitmap = await createImageBitmap(blob);
 
