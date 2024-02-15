@@ -1,1 +1,0 @@
-onmessage=async({data:s})=>{const e={buffer:await(await f(s)).arrayBuffer()};postMessage(e,{transfer:[e.buffer]}),close()};async function f({img:{width:s,height:o},buffer:r,config:e}){const t=new OffscreenCanvas(s,o),a=t.getContext("2d"),n=new Blob([r],{type:e.originalType}),c=await createImageBitmap(n);return a==null||a.drawImage(c,0,0),await t.convertToBlob(e)}
