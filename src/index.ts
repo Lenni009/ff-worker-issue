@@ -11,6 +11,8 @@ fileInput?.addEventListener('change', async () => {
     const files = Array.from(fileInput.files ?? []);
     const compressedBlobsPromise = files.map((file) => compressImage(file));
 
+    console.log(files[0].name)
+
     const compressedBlobs = await Promise.all(compressedBlobsPromise);
 
     const compressedFiles = compressedBlobs.map(blob => new File([blob], 'fileName', { type: 'image/jpeg' }))
