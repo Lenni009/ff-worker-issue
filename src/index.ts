@@ -1,4 +1,4 @@
-import { compressImage } from './lib/main';
+import { compressImage, imageTypes } from './lib/main';
 
 const fileInput = document.getElementById('file-upload');
 
@@ -9,7 +9,15 @@ fileInput?.addEventListener('change', async () => {
     }
     console.log("starting...")
     const files = Array.from(fileInput.files ?? []);
-    const compressedBlobsPromise = files.map((file) => compressLoop(file));
+
+    let id = 0;
+
+    const fileObjects = files.map(file => ({
+        id: id++,
+        file
+    }))
+
+    const compressedBlobsPromise = fileObjects.map((fileObj) => compressLoop(fileObj.file));
 
     const compressedBlobs = await Promise.all(compressedBlobsPromise);
 
@@ -18,9 +26,17 @@ fileInput?.addEventListener('change', async () => {
     console.log('done', compressedFiles);
 })
 
-async function compressLoop(file: File, quality: number = 1) {
-    console.log(quality)
-    const compressedFile = await compressImage(file, { quality });
-    if (quality === 1) return compressLoop(file, (quality - 0.1));
-    return compressedFile;
-}
+const maxSize = 500000; // 500KB
+
+export async function compressLoop(file: File, quality: number = 1): Promise<File> {
+    if (file.size < maxSize) return file; // if below maxSize, don't do anything
+    const res = await compressImage(file, {
+      quality,
+      type: imageTypes.JPEG,
+    });
+    const lowerQuality = quality - 0.01; // NoSonar reduce quality by 1%;
+    if (res.size > maxSize) return await compressLoop(file, lowerQuality); // compress original file with lower quality setting to avoid double compression
+    const fileName = file.name.split('.').slice(0, -1).join('.');
+    const newFileName = fileName + '-min.jpg';
+    return new File([res], newFileName, { type: imageTypes.JPEG });
+  }
