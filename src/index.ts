@@ -30,6 +30,7 @@ const maxSize = 500000; // 500KB
 
 export async function compressLoop(file: File, quality: number = 1): Promise<File> {
     if (file.size < maxSize) return file; // if below maxSize, don't do anything
+    console.log(quality)
     const res = await compressImage(file, {
       quality,
       type: imageTypes.JPEG,
