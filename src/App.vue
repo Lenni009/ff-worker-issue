@@ -33,7 +33,7 @@ async function addFiles() {
   files.value.push(...fileObjects);
 }
 
-// when the main file array length changes, compress all uncompressed images 
+// when the main file array length changes, compress all uncompressed images
 watch(
   () => files.value.length,
   () => {
