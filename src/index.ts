@@ -3,10 +3,17 @@ import { compressImage } from './lib/main';
 const fileInput = document.getElementById('file-upload');
 
 fileInput?.addEventListener('change', async () => {
-    if (!(fileInput instanceof HTMLInputElement)) return;
+    if (!(fileInput instanceof HTMLInputElement)) {
+        console.error("input is null");
+        return;
+    }
+    console.log("starting...")
     const files = Array.from(fileInput.files ?? []);
-    const compressedFiles = files.map((file) => compressImage(file));
+    const compressedBlobsPromise = files.map((file) => compressImage(file));
 
-    await Promise.all(compressedFiles);
+    const compressedBlobs = await Promise.all(compressedBlobsPromise);
+
+    const compressedFiles = compressedBlobs.map(blob => new File([blob], 'fileName', { type: 'image/jpeg' }))
+
     console.log('done', compressedFiles);
 })
