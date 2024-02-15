@@ -23,16 +23,16 @@ fileInput?.addEventListener('change', async () => {
     const compressedFiles = await Promise.all(compressedBlobsPromise);
 
     console.log('done', compressedFiles);
+
+    async function editFileObj(fileObj: { id: number, file: File }) {
+        const compressedFile = await compressLoop(fileObj.file);
+        const item = fileObjects.find((item) => item.id === fileObj.id);
+        if (!item) return;
+        item.file = compressedFile;
+        item.isCompressed = true;
+    }
 })
 
-async function editFileObj(fileObj:{id: number, file: File}) {
-    const compressedFile = await compressLoop(fileObj.file);
-    return {
-        id: fileObj.id,
-        isCompressed: true,
-        file: compressedFile,
-    }
-}
 
 const maxSize = 500000; // 500KB
 
@@ -48,4 +48,4 @@ export async function compressLoop(file: File, quality: number = 1): Promise<Fil
     const fileName = file.name.split('.').slice(0, -1).join('.');
     const newFileName = fileName + '-min.jpg';
     return new File([res], newFileName, { type: imageTypes.JPEG });
-  }
+}
