@@ -14,17 +14,25 @@ fileInput?.addEventListener('change', async () => {
 
     const fileObjects = files.map(file => ({
         id: id++,
+        isCompressed: false,
         file
     }))
 
-    const compressedBlobsPromise = fileObjects.map((fileObj) => compressLoop(fileObj.file));
+    const compressedBlobsPromise = fileObjects.map(editFileObj);
 
-    const compressedBlobs = await Promise.all(compressedBlobsPromise);
-
-    const compressedFiles = compressedBlobs.map(blob => new File([blob], 'fileName', { type: 'image/jpeg' }))
+    const compressedFiles = await Promise.all(compressedBlobsPromise);
 
     console.log('done', compressedFiles);
 })
+
+async function editFileObj(fileObj:{id: number, file: File}) {
+    const compressedFile = await compressLoop(fileObj.file);
+    return {
+        id: fileObj.id,
+        isCompressed: true,
+        file: compressedFile,
+    }
+}
 
 const maxSize = 500000; // 500KB
 
