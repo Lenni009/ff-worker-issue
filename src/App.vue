@@ -36,7 +36,7 @@ watch(() => files.value.length, () => {
 async function editFileObj(fileObj: FileObj) {
     const compressedImage = await compressImage(fileObj.file);
 
-    const compressedFile = new File([compressedImage], 'filename', {type: 'image/jpeg'});
+    const compressedFile = new File([compressedImage], 'compressed', {type: 'image/jpeg'});
     fileObj.isCompressed = true;
     fileObj.file = compressedFile;
 }
