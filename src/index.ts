@@ -9,9 +9,7 @@ fileInput?.addEventListener('change', async () => {
     }
     console.log("starting...")
     const files = Array.from(fileInput.files ?? []);
-    const compressedBlobsPromise = files.map((file) => compressImage(file));
-
-    console.log(files[0].name)
+    const compressedBlobsPromise = files.map((file) => compressLoop(file));
 
     const compressedBlobs = await Promise.all(compressedBlobsPromise);
 
@@ -19,3 +17,10 @@ fileInput?.addEventListener('change', async () => {
 
     console.log('done', compressedFiles);
 })
+
+async function compressLoop(file: File, quality: number = 1) {
+    console.log(quality)
+    const compressedFile = await compressImage(file, { quality });
+    if (quality === 1) return compressLoop(file, (quality - 0.1));
+    return compressedFile;
+}
