@@ -17,7 +17,7 @@ async function compress(file: File) {
 
   // logging
   runs++;
-  console.log(runs); // should reach 16
+  console.log(runs); // should reach amount of files in the input
 
   return compressedFile;
 }
@@ -30,10 +30,12 @@ async function compressFiles() {
     return;
   }
   console.log("Starting compression...");
-  console.log("The counter should reach 16");
-
+  
   // creating the array of files to compress
   const fileArray = Array.from(fileInput.files ?? []);
+  
+  console.log(`The counter should reach ${fileArray.length}`);
+
 
   // compressing all files simultaneously
   const compressedFileArrayPromise = fileArray.map(compress);
