@@ -17,14 +17,19 @@
         target="_blank"
         >public/testImages</a
       >.<br />
+      Click one of the two buttons below.<br />
       It will log out how many files have been compressed.<br />
       If everything worked, the counter will match the amount of uploaded files
       and will display a success message at the end.<br />
-      In Chrome, this works consistently.<br />
-      In Firefox, it depends on what you are doing.<br />
-      If you are compressing many small files, one or two might just be
-      forgotten, but there won't be any error. (This doesn't happen
-      consistently, may need multiple tries)<br />
+      In Chrome, this works consistently with both options.<br />
+      In Firefox, it depends on what you are doing and which button you are
+      using.<br />
+      If you are using the "Compress without transfer" button, everything should
+      work fine.<br />
+      Otherwise, if you are compressing many small files, one or two might just
+      be forgotten, but there won't be any error. (This doesn't happen
+      consistently, may need multiple tries or an increased amount of files
+      (just double the files until it breaks))<br />
       If you are compressing very large files, there will be a "Object is no
       longer usable" error. (this happens consistently on my machine)<br />
       That error happens in the
@@ -33,8 +38,18 @@
         target="_blank"
         >src/lib/worker.ts</a
       >
-      file (marked by comment)
+      file (marked by comment).<br />
+      To see whether it's still working or has already failed, go to your
+      debugger and see whether it displays any active workers. No workers = no
+      work being done = failed.
     </p>
     <input id="file-upload" type="file" multiple />
+
+    <br />
+    <br />
+    <button id="compression-transfer-btn">Compress with transfer</button> <span>(This is likely to fail)</span>
+    <br />
+    <br />
+    <button id="compression-btn">Compress without transfer</button> <span>(This should work fine)</span>
   </body>
 </html>
