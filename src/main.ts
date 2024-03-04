@@ -37,6 +37,7 @@ async function compress(file: File, transfer: boolean) {
 
 // compress image and adjust metadata accordingly
 async function compressFiles(transfer: boolean) {
+  console.time("tracking");
   // reassuring TS that the element exists
   if (!(fileInput instanceof HTMLInputElement)) {
     console.error("input not found!");
@@ -55,4 +56,5 @@ async function compressFiles(transfer: boolean) {
   );
   const compressedFileArray = await Promise.all(compressedFileArrayPromise);
   console.log("finished!", compressedFileArray);
+  console.timeEnd("tracking");
 }

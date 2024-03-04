@@ -12,6 +12,7 @@ onmessage = async ({ data }: MessageEvent<WorkerMessage>) => {
       status: "success",
       data: buffer,
     };
+	console.warn("transferring back!")
     postMessage(transferObject, { transfer: [transferObject.data] });
   } catch (error) {
     const errorMessage =
