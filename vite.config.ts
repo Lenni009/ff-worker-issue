@@ -1,6 +1,9 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/ff-worker-issue/',
+  base: "/ff-worker-issue/",
+  build: {
+    minify: false,
+  },
 });
