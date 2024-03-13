@@ -7,14 +7,13 @@ import type {
 onmessage = async ({ data }: MessageEvent<WorkerMessage>) => {
   try {
     const workerResult = await compressFileWorker(data);
-    const buffer = await workerResult.arrayBuffer();
     const transferObject: WorkerSuccessResponse = {
       status: "success",
-      data: buffer,
+      data: workerResult,
     };
-	console.warn("transferring back!")
-    postMessage(transferObject, { transfer: [transferObject.data] });
+    postMessage(transferObject);
   } catch (error) {
+	console.error(error)
     const errorMessage =
       error instanceof Error ? error.message : "Something went wrong";
     const transferObject: WorkerErrorResponse = {
@@ -27,24 +26,17 @@ onmessage = async ({ data }: MessageEvent<WorkerMessage>) => {
   }
 };
 
-async function compressFileWorker({
-  img: { width, height },
-  buffer,
-  config,
-}: WorkerMessage) {
+async function compressFileWorker({ blob, config }: WorkerMessage) {
+  const imageBitmap = await createImageBitmap(blob);
+
+  const { width, height } = imageBitmap;
+
   // Create an OffscreenCanvas
   const offscreenCanvas = new OffscreenCanvas(width, height);
-  const ctx = offscreenCanvas.getContext("2d");
-
-  const blob = new Blob([buffer], { type: config.originalType });
-
-  // -----------------------------
-  // Create an ImageBitmap from the blob
-  const imageBitmap = await createImageBitmap(blob); // THIS STEP FAILS!!
-  // -----------------------------
+  const ctx = offscreenCanvas.getContext("bitmaprenderer");
 
   // Draw the ImageBitmap onto the OffscreenCanvas
-  ctx?.drawImage(imageBitmap, 0, 0);
+  ctx?.transferFromImageBitmap(imageBitmap);
 
   const compressedBlob = await offscreenCanvas.convertToBlob(config);
 

@@ -1,7 +1,9 @@
-import { imageTypes } from "../imageTypes";
-import { objectURLtoImage } from "../objectURLtoImage";
-import type { CompressionConfig, WorkerMessageConfig } from "../genericTypes";
-import type { WorkerMessage } from "./types";
+import { imageTypes } from "./imageTypes";
+import type {
+  CompressionConfig,
+  WorkerMessage,
+  WorkerMessageConfig,
+} from "./types";
 import { handleWorkerProcess } from "./workerHandler";
 
 export async function compressImage(
@@ -12,11 +14,6 @@ export async function compressImage(
   config.type ??= imageTypes.JPEG;
   config.quality ??= 0.92;
 
-  // get width & height of file for canvas dimensions in worker
-  const objectUrl = URL.createObjectURL(file);
-  const { width, height } = await objectURLtoImage(objectUrl);
-  URL.revokeObjectURL(objectUrl);
-
   const workerConfig: WorkerMessageConfig = {
     originalType: file.type,
     ...config,
@@ -25,7 +22,6 @@ export async function compressImage(
   // construct object to send to worker
   const workerMessage: WorkerMessage = {
     blob: file,
-    img: { width, height },
     config: workerConfig,
   };
 
@@ -35,6 +31,3 @@ export async function compressImage(
   // if the compression made size worse, just return the original file
   return compressedBlob;
 }
-
-// export for final bundle
-export { imageTypes, type CompressionConfig };

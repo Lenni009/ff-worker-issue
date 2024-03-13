@@ -1,27 +1,16 @@
-import { compressImage } from "./lib/default/main";
-import { compressImage as compressImageTransfer } from "./lib/transfer/main";
+import { compressImage } from "./lib/main";
 
 const fileInput = document.getElementById("file-upload");
 
-const compressionBtn = document.getElementById("compression-btn");
-const compressionTransferBtn = document.getElementById(
-  "compression-transfer-btn"
-);
+const delayInput = document.getElementById("delay-input");
 
-compressionBtn?.addEventListener("click", () => compressFiles(false));
-compressionTransferBtn?.addEventListener("click", () => compressFiles(true));
+fileInput?.addEventListener("change", () => compressFiles());
 
 // logging
 let runs = 0;
 
-async function compress(file: File, transfer: boolean) {
-  let compressedImage;
-
-  if (transfer) {
-    compressedImage = await compressImageTransfer(file); // error happens in worker
-  } else {
-    compressedImage = await compressImage(file); // error happens in worker
-  }
+async function compress(file: File) {
+  const compressedImage = await compressImage(file); // error happens in worker
 
   // compressImage returns a blob, so we need to convert that to a file
   const compressedFile = new File([compressedImage], "compressed", {
@@ -36,25 +25,37 @@ async function compress(file: File, transfer: boolean) {
 }
 
 // compress image and adjust metadata accordingly
-async function compressFiles(transfer: boolean) {
-  console.time("tracking");
+async function compressFiles() {
+  //   console.time("tracking");
   // reassuring TS that the element exists
-  if (!(fileInput instanceof HTMLInputElement)) {
+  if (
+    !(
+      fileInput instanceof HTMLInputElement &&
+      delayInput instanceof HTMLInputElement
+    )
+  ) {
     console.error("input not found!");
     return;
   }
   console.log("Starting compression...");
-
+  const delay = parseInt(delayInput.value || "0");
+  console.log("delay:", delay);
   // creating the array of files to compress
   const fileArray = Array.from(fileInput.files ?? []);
 
   console.log(`The counter should reach ${runs + fileArray.length}`);
 
+  const timer = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
   // compressing all files simultaneously
-  const compressedFileArrayPromise = fileArray.map((file) =>
-    compress(file, transfer)
-  );
+  const compressedFileArrayPromise: Promise<File>[] = [];
+
+  for (const file of fileArray) {
+    compressedFileArrayPromise.push(compress(file));
+    if (!delay) continue;
+    await timer(delay);
+  }
   const compressedFileArray = await Promise.all(compressedFileArrayPromise);
   console.log("finished!", compressedFileArray);
-  console.timeEnd("tracking");
+  //   console.timeEnd("tracking");
 }

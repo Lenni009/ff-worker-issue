@@ -17,39 +17,36 @@
         target="_blank"
         >public/testImages</a
       >.<br />
-      Click one of the two buttons below.<br />
-      It will log out how many files have been compressed.<br />
-      If everything worked, the counter will match the amount of uploaded files
-      and will display a success message at the end.<br />
-      In Chrome, this works consistently with both options.<br />
-      In Firefox, it depends on what you are doing and which button you are
-      using.<br />
-      If you are using the "Compress without transfer" button, everything should
-      work fine.<br />
-      Otherwise, if you are compressing many small files, one or two might just
-      be forgotten, but there won't be any error. (This doesn't happen
-      consistently, may need multiple tries or an increased amount of files
-      (just double the files until it breaks))<br />
-      If you are compressing very large files, there will be a "Object is no
-      longer usable" error. (this happens consistently on my machine)<br />
-      That error happens in the
-      <a
-        href="https://github.com/Lenni009/ff-worker-issue/blob/main/src/lib/worker.ts"
-        target="_blank"
-        >src/lib/worker.ts</a
-      >
-      file (marked by comment).<br />
-      To see whether it's still working or has already failed, go to your
-      debugger and see whether it displays any active workers. No workers = no
-      work being done = failed.
+      <br />
+      <span style="font-weight: bold">Test 1: object unusable</span><br />
+      Use the "large" files first.<br />
+      Drop the test files on the file input below.<br />
+      When the delay input is empty, some files should fail with the message "An
+      attempt was made to use an object that is not, or is no longer,
+      usable".<br />
+      If none fail, try again. The error appears fairly frequently (at least on
+      my machine).<br />
+      Now put a number in the delay. 100 should be enough.<br />
+      The error doesn't appear anymore. If it still appears, increase the number
+      and try again.<br />
+      <br />
+      <span style="font-weight: bold">Test 2: silent error</span><br />
+      This one is much harder to reproduce.<br />
+      Take the "small" files from the testImages folder.<br />
+      Clear the delay input.<br />
+      Drop all files on the input.<br />
+      Sometimes, the counter does not reach the expected number, but there also
+      is no error.<br />
+      If everything worked fine, either try again with the same images, or
+      increase the amount of images by copy-pasting.<br />
+      But even with 200 images, it's hard to reproduce.<br />
+      <br>
+      -> These bugs probably have to do with files being copied to workers simultaneously<br />
     </p>
-    <input id="file-upload" type="file" multiple />
+    <input id="delay-input" type="number" placeholder="delay in ms" />
 
     <br />
     <br />
-    <button id="compression-transfer-btn">Compress with transfer</button> <span>(This is likely to fail)</span>
-    <br />
-    <br />
-    <button id="compression-btn">Compress without transfer</button> <span>(This should work fine)</span>
+    <input id="file-upload" type="file" multiple />
   </body>
 </html>
